@@ -1,14 +1,15 @@
 package com.bridgelabz.invoiceGenerator;
 
 public class Ride {
-    double distance;
-    int time;
-    RideCategories preminum;
+     public double distance;
+    public int time;
 
-    public Ride(double distance, int time, RideCategories preminum) {
+    public final CabRide cabRide;
+
+    public Ride(CabRide cabRide, double distance, int time) {
         this.distance=distance;
         this.time=time;
-        this.preminum=preminum;
+        this.cabRide=cabRide;
 
     }
 }

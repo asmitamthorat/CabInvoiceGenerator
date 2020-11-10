@@ -1,35 +1,42 @@
 package com.bridgelabz.invoiceGenerator;
 
 public class InvoiceGenerator {
-    public double calculateFare(double distance, int time) {
-        Double totalFare= distance*RideCategories.NORMAL.costPerKM+time*RideCategories.NORMAL.costPerMinute;
-        if(totalFare<RideCategories.NORMAL.minimumFare){
-            totalFare=RideCategories.NORMAL.minimumFare;
-        }
-        return totalFare;
+
+    private RideRepository rideRepository;
+
+    void setRideRepository(RideRepository rideRepository){
+        this.rideRepository=rideRepository;
     }
+
+
 
     public InvoiceSummary calculateFare(Ride[] rides) throws InvoiceGeneratorException {
 
         double totalFare = 0;
         for (Ride ride:rides) {
-            totalFare +=this.calculateFare(ride.distance,ride.time,ride.preminum);
+            totalFare +=ride.cabRide.calCostOfCabRide(ride);
+        }
+        if(totalFare<5){
+            throw new InvoiceGeneratorException(InvoiceGeneratorException.ExceptionType.LESS_FARE,"minimum fare is required");
         }
         return new InvoiceSummary(rides.length,totalFare);
     }
 
-    public double calculateFare(double distance, int time,RideCategories subscriptionMode) throws InvoiceGeneratorException {
-
-        double totalFare = 0;
-        double fare=0;
-        if (subscriptionMode==RideCategories.PREMIUM) {
-            fare= distance*RideCategories.PREMIUM.costPerKM+time*RideCategories.PREMIUM.costPerMinute;
-            fare= Math.max(fare,RideCategories.PREMIUM.minimumFare);
+    public void addRides(String userID,Ride[] rides) throws InvoiceGeneratorException{
+        if(userID=="abc"){
+            rideRepository.addRide(userID,rides);
         }
-        if(subscriptionMode==RideCategories.NORMAL){
-            fare=calculateFare( distance, time);
+        if(userID==null){
+            throw  new InvoiceGeneratorException(InvoiceGeneratorException.ExceptionType.USERNAME_NULL,"Null UserName");
         }
-        totalFare=totalFare+fare;
-        return totalFare;
+        if(userID!="abc"){
+            throw new InvoiceGeneratorException(InvoiceGeneratorException.ExceptionType.INVALID_LOGIN,"Wrong user Name");
+        }
     }
+
+    public InvoiceSummary getInvoiceSummary(String userID) throws InvoiceGeneratorException{
+        return this.calculateFare(rideRepository.getRides(userID));
+    }
+
+
 }
