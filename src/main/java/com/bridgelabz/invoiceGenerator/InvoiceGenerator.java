@@ -17,7 +17,7 @@ public class InvoiceGenerator {
             totalFare +=ride.cabRide.calCostOfCabRide(ride);
         }
         if(totalFare<5){
-            throw new InvoiceGeneratorException(InvoiceGeneratorException.ExceptionType.LESS_FARE,"minimum fare is required");
+            throw new InvoiceGeneratorException(InvoiceGeneratorException.ExceptionType.LESS_FARE,"assigning minimum fare");
         }
         return new InvoiceSummary(rides.length,totalFare);
     }
